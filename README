@@ -1,0 +1,97 @@
+NAME
+    Module::Selector - use the first module, that works.
+
+SYNOPSIS
+            use Module::Selector;
+
+            $mods = Module::Selector->new(['Some::Mod', 'Other::Mod', 'YAM']);
+
+            while(defined($mod = $mods->each)) {
+                    $@ = undef;
+                    eval { $mod->do_something() };
+                    last unless $@
+            }
+
+            $mods->rewind;
+
+            while(defined($mod = $mods->each)) {
+                    $@ = undef;
+                    eval { $mod->something_else() };
+                    last unless $@
+            }
+
+DESCRIPTION
+    The idea behind this module is to test for a series of modules with a
+    common interface, as to see either which module is able to do a specific
+    task or simply to see which module is installed.
+
+    This module is especially useful if you had to test the modules, which
+    you wish to use, multiple times otherwise, which is a bit tricky via
+    eval.
+
+    It will try to load the given modules one by one, loading them only if
+    needed.
+
+METHODS
+    new(LIST REFERENCE TO PKGS)
+        Creates a new object, should be given a reference to a list of
+        module names (like "File::Spec", "MP3::Info", ...) as sole argument.
+
+    each
+        Returns the next module that was successfully imported via require,
+        returns undef once if no other module could be imported. After that
+        it starts again with the first module..
+
+    rewind
+        Resets "each()", so that it starts again with the first module, even
+        if there were other modules still availabe to test. Useful if you
+        abort loops and want to start all over again.
+
+EXPORTS
+    None.
+
+CAVEATS
+    Module::Selector saves any errors encountered when loading modules in a
+    locally scoped hash (local to the the "_try()" function, which is used
+    by "each()"). This is necessary, sorry.
+
+PREREQUISITES
+    
+None.
+
+INSTALLATION
+
+To install this module, run the following commands:
+
+    perl Makefile.PL
+    make
+    make test
+    make install
+
+
+SUPPORT AND DOCUMENTATION
+
+After installing, you can find documentation for this module with the perldoc command.
+
+    perldoc Module::Selector
+
+You can also look for information at:
+
+    Search CPAN
+        http://search.cpan.org/dist/Module-Selector
+
+    CPAN Request Tracker:
+        http://rt.cpan.org/NoAuth/Bugs.html?Dist=Module-Selector
+
+    AnnoCPAN, annotated CPAN documentation:
+        http://annocpan.org/dist/Module-Selector
+
+    CPAN Ratings:
+        http://cpanratings.perl.org/d/Module-Selector
+
+COPYRIGHT AND LICENCE
+
+Copyright (C) 2006 Odin Kroeger
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
